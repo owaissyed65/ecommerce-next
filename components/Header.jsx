@@ -49,10 +49,12 @@ const Header = () => {
                         <IoMdHeartEmpty className="text-[15px] md:text-[24px] cursor-pointer" />
                         <div className="h-[14px] md:h-[18px] min-w-[14px] md:min-w-[18px] rounded-full flex justify-center items-center px-[2px] md:px-[5px] text-white text-[10px] md:text-[12px] bg-red-700 absolute top-0 right-[8%]" >51</div>
                     </div>
+                    <Link href="/cart">
                     <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center relative items-center cursor-pointer hover:bg-black/[0.05]">
                         <BsCart className="text-[15px] md:text-[20px] cursor-pointer" />
                         <div className="h-[14px] md:h-[18px] min-w-[14px] md:min-w-[18px] rounded-full flex justify-center items-center px-[2px] md:px-[5px] text-white text-[10px] md:text-[12px] bg-red-700 absolute top-0 right-[8%]">5</div>
                     </div>
+                    </Link>
                     {/* icons end */}
                     {/* Icons for mobile */}
                     <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center relative items-center cursor-pointer hover:bg-black/[0.05] md:hidden" onClick={() => { !mobileMenu ? setMobileMenu(true) : setMobileMenu(false) }}>
