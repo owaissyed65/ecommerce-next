@@ -1,39 +1,51 @@
 import ProductDetailCarousel from '@/components/ProductDetailCarousel'
 import RelatedProducts from '@/components/RelatedProduct'
 import Wrapper from '@/components/Wrapper'
+import fetchDataFromApi from '@/utils/api'
+import getDiscountedPricePercentage from '@/utils/productpricerange'
 import React from 'react'
 import { IoMdHeartEmpty } from 'react-icons/io'
-const productDetail = () => {
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+const productDetail = ({ product, products }) => {
+    const p = product?.data?.[0]?.attributes;
     return (
         <div className="w-full md:py-20">
             <Wrapper>
                 <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
                     {/* left column start */}
                     <div className="w-full md:w-auto flex-[1.5] max-w-[500px] lg:max-w-full mx-auto lg:mx-0">
-                        <ProductDetailCarousel />
+                        <ProductDetailCarousel images={p.image.data} />
                     </div>
                     {/* right column start */}
                     <div className="flex-[1] py-3">
                         <div className="text-[34px] font-semibold mb-2 leading-tight">
-                            jordan Retro 6 G
+                        {p.name}
                         </div>
 
                         {/* PRODUCT SUBTITLE */}
                         <div className="text-lg font-semibold mb-5">
-                            Man's Shoe
+                        {p.subtitle}
                         </div>
                         {/* PRODUCT PRICE */}
-                        <div className="flex items-center">
+                         {/* PRODUCT PRICE */}
+                         <div className="flex items-center">
                             <p className="mr-2 text-lg font-semibold">
-                                MRP : &#8377;6000
+                                MRP : &#8377;{p.price}
                             </p>
-                            <p className="text-base  font-medium line-through">
-                                &#8377;4800
-                            </p>
-                            <p className="ml-auto text-base font-medium text-green-500">
-
-                                20% off
-                            </p>
+                            {p.original_price && (
+                                <>
+                                    <p className="text-base  font-medium line-through">
+                                        &#8377;{p.original_price}
+                                    </p>
+                                    <p className="ml-auto text-base font-medium text-green-500">
+                                        {getDiscountedPricePercentage(
+                                            p.original_price,
+                                            p.price
+                                        )}
+                                        % off
+                                    </p>
+                                </>
+                            )}
                         </div>
                         <div className="text-md font-medium text-black/[0.5]">
                             incl. of taxes
@@ -90,17 +102,47 @@ const productDetail = () => {
                                 <div className="text-lg font-bold mb-5">
                                     Product Details
                                 </div>
-                                <div className="markdown text-md mb-5">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum provident asperiores quae nisi hic vitae explicabo itaque obcaecati natus eos eveniet sequi eum enim sit expedita architecto autem, molestias commodi! Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil molestiae quis inventore mollitia ut dolore vero sapiente voluptate, suscipit autem aspernatur illo praesentium temporibus hic molestias nisi est explicabo quidem unde quia excepturi error minima. Esse consequatur quod facere nulla. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, natus nesciunt. Earum possimus, amet voluptatibus sed enim delectus cumque culpa laudantium necessitatibus beatae optio excepturi tenetur ipsa sit atque natus reprehenderit? Minus quas, officia aliquam fugit culpa vel. Pariatur nisi eum harum neque quibusdam atque cum nam, nesciunt accusamus cupiditate?
+                                <div className="markdown text-md mb-5" >    
+                                <ReactMarkdown>{p.description}</ReactMarkdown> 
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <RelatedProducts/>
+                <RelatedProducts products={products}/>
             </Wrapper>
         </div>
     )
 }
 
 export default productDetail
+export async function getStaticPaths() {
+    const products = await fetchDataFromApi("/api/products?populate=*");
+    const paths = products?.data?.map((p) => ({
+        params: {
+            slug: p.attributes.slug,
+        },
+    }));
+
+    return {
+        paths,
+        fallback: false,
+    };
+}
+
+export async function getStaticProps({ params: { slug } }) {
+    
+    const product = await fetchDataFromApi(
+        `/api/products?populate=*&filters[slug][$eq]=${slug}`
+    );
+    const products = await fetchDataFromApi(
+        `/api/products?populate=*&[filters][slug][$ne]=${slug}`
+    );
+
+    return {
+        props: {
+            product,
+            products,
+        },
+    };
+}

@@ -2,10 +2,10 @@ import HeroBanner from "@/components/HeroBanner";
 import ProductCard from "@/components/ProductCard";
 import Wrapper from "@/components/Wrapper";
 import fetchDataFromApi from "@/utils/api";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Home({products}) {
-    console.log(products)
     return <main >
         <HeroBanner />
         <Wrapper>
@@ -23,7 +23,7 @@ export default function Home({products}) {
             {/* heading and paragaph end */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
                 {products?.data?.map((curEle,id)=>{
-                    return <ProductCard />
+                    return ( <ProductCard key={curEle?.id} data={curEle} />)
                 })}
                 
             </div>
@@ -31,8 +31,9 @@ export default function Home({products}) {
     </main>;
 }
 export async function getStaticProps(context) {
-    const products = await fetchDataFromApi('api/products');
+    console.log(context)
+    const products = await fetchDataFromApi('/api/products?populate=*');
     return {
-        props: { products }, // will be passed to the page component as props
+        props: { products }
     };
 }

@@ -28,10 +28,9 @@ const RelatedProducts = ({ products }) => {
                 containerClass="-mx-[10px]"
                 itemClass="px-[10px]"
             >
-                <ProductCard/>
-                <ProductCard/>
-                <ProductCard/>
-                <ProductCard/>
+                  {products?.data?.map((product) => (
+                    <ProductCard key={product?.id} data={product} />
+                ))}
             </Carousel>
         </div>
     );

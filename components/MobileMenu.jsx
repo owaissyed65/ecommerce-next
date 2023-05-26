@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import React from 'react'
 import { RiArrowDropDownLine } from 'react-icons/ri'
-const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu }) => {
+const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu ,category}) => {
     const data = [
         { id: 1, name: "Home", url: "/" },
         { id: 2, name: "About", url: "/about" },
         { id: 3, name: "Categories", subMenu: true },
         { id: 4, name: "Contact", url: "/contact" },
     ];
-
+    const capitalizeFirstLetter = (name) =>{
+        let upperCase = name?.toUpperCase()
+        return upperCase.slice(0,1) + name.slice(1)
+    }
     const subMenuData = [
         { id: 1, name: "Jordan", doc_count: 11 },
         { id: 2, name: "Sneakers", doc_count: 8 },
@@ -30,11 +33,11 @@ const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu }) => {
                                         </div>
 
                                         {showCatMenu && <ul className='bg-black/[0.05] -mx-5 mt-4 -mb-4'>
-                                            {subMenuData.map((data) => {
+                                            {category.map(({attributes:c,id}) => {
                                                 return (
-                                                    <Link href='/' className='px-1 py-2 hover:text-black hover:bg-black/10 ' key={data.id}>
-                                                        <li className="py-2 px-8 border-t flex justify-between  " >{data.name}
-                                                            <span className='text-black/60'>{data.doc_count}</span>
+                                                    <Link href={`/category/${c?.slug}`}  key={id} className='px-1 py-2 hover:text-black hover:bg-black/10 '>
+                                                        <li className="py-2 px-8 border-t flex justify-between">{capitalizeFirstLetter(c?.name)}
+                                                            <span className='text-black/60'>({c?.products?.data?.length})</span>
                                                         </li>
                                                     </Link>)
                                             })}
