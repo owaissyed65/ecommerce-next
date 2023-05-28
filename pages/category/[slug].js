@@ -35,7 +35,7 @@ const Category = ({ category, products, slug }) => {
                 {/* products grid start */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
                     {data?.data?.map((product) => (
-                        <Link href={`/product/slug`}><ProductCard key={product?.id} data={product} /></Link>
+                         <ProductCard data={product}  key={product?.id}/>
                     ))}
                     {/* <ProductCard />
                     <ProductCard />

@@ -8,7 +8,9 @@ import { BiMenuAltRight } from 'react-icons/bi'
 import { VscChromeClose } from 'react-icons/vsc'
 import MobileMenu from "./MobileMenu";
 import fetchDataFromApi from "@/utils/api";
+import { useSelector } from "react-redux";
 const Header = () => {
+    const { cartItem } = useSelector(state => state.cart)
     const [mobileMenu, setMobileMenu] = useState(false);
     const [showCatMenu, setShowCatMenu] = useState(false);
     const [show, setShow] = useState('translate-y-0');
@@ -35,8 +37,8 @@ const Header = () => {
             window.removeEventListener('scroll', controlNavbar)
         }
     }, [lastScroll])
-    const fetchData =async () => {
-        const {data} = await fetchDataFromApi('/api/categories?populate=*')
+    const fetchData = async () => {
+        const { data } = await fetchDataFromApi('/api/categories?populate=*')
         setCategory(data)
     }
     useEffect(() => {
@@ -49,7 +51,7 @@ const Header = () => {
                     <img src="/logo.svg" alt="" className="w-[40px] md:w-[60px]" />
                 </Link>
                 <Menu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} category={category} />
-                {mobileMenu && <MobileMenu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} setMobileMenu={setMobileMenu} category={category}/>}
+                {mobileMenu && <MobileMenu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} setMobileMenu={setMobileMenu} category={category} />}
 
                 {/* <Menu/> */}
                 <div className="flex gap-2 text-black items-center">
@@ -61,7 +63,7 @@ const Header = () => {
                     <Link href="/cart">
                         <div className="w-8 md:w-12 h-8 md:h-12 rounded-full flex justify-center relative items-center cursor-pointer hover:bg-black/[0.05]">
                             <BsCart className="text-[15px] md:text-[20px] cursor-pointer" />
-                            <div className="h-[14px] md:h-[18px] min-w-[14px] md:min-w-[18px] rounded-full flex justify-center items-center px-[2px] md:px-[5px] text-white text-[10px] md:text-[12px] bg-red-700 absolute top-0 right-[8%]">5</div>
+                            <div className="h-[14px] md:h-[18px] min-w-[14px] md:min-w-[18px] rounded-full flex justify-center items-center px-[2px] md:px-[5px] text-white text-[10px] md:text-[12px] bg-red-700 absolute top-0 right-[8%]">{cartItem?.length}</div>
                         </div>
                     </Link>
                     {/* icons end */}
