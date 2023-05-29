@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react'
 import { RiArrowDropDownLine } from 'react-icons/ri'
-const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu ,category}) => {
+const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu ,category,mobileMenu}) => {
     const data = [
         { id: 1, name: "Home", url: "/" },
         { id: 2, name: "About", url: "/about" },
@@ -35,7 +35,7 @@ const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu ,category}) => 
                                         {showCatMenu && <ul className='bg-black/[0.05] -mx-5 mt-4 -mb-4'>
                                             {category.map(({attributes:c,id}) => {
                                                 return (
-                                                    <Link href={`/category/${c?.slug}`}  key={id} className='px-1 py-2 hover:text-black hover:bg-black/10 '>
+                                                    <Link href={`/category/${c?.slug}`}  key={id} className='px-1 py-2 hover:text-black hover:bg-black/10 ' onClick={()=>setMobileMenu(false)}>
                                                         <li className="py-2 px-8 border-t flex justify-between">{capitalizeFirstLetter(c?.name)}
                                                             <span className='text-black/60'>({c?.products?.data?.length})</span>
                                                         </li>
@@ -47,7 +47,7 @@ const MobileMenu = ({ showCatMenu, setShowCatMenu, setMobileMenu ,category}) => 
 
                                 ) : (
                                     <li key={curEle.id} className="w-full border-b  px-5 py-4">
-                                        <Link href={curEle.url}>{curEle.name}</Link>
+                                        <Link href={curEle.url} onClick={()=>setMobileMenu(false)}>{curEle.name}</Link>
                                     </li>
                                 )
                             }

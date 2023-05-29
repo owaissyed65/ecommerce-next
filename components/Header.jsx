@@ -51,7 +51,7 @@ const Header = () => {
                     <img src="/logo.svg" alt="" className="w-[40px] md:w-[60px]" />
                 </Link>
                 <Menu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} category={category} />
-                {mobileMenu && <MobileMenu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} setMobileMenu={setMobileMenu} category={category} />}
+                {mobileMenu && <MobileMenu showCatMenu={showCatMenu} setShowCatMenu={setShowCatMenu} setMobileMenu={setMobileMenu} category={category} mobileMenu={mobileMenu}/>}
 
                 {/* <Menu/> */}
                 <div className="flex gap-2 text-black items-center">
