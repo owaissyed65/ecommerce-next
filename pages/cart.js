@@ -6,7 +6,9 @@ import CartItem from "@/components/CartItem";
 import { useSelector } from "react-redux";
 const Cart = () => {
     const cart = useSelector(state => state.cart)
-
+    let subTotal = useMemo(() => {
+        return cart.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+    }, [cart])
     return (
         <div className="w-full md:py-20">
             <Wrapper>
@@ -40,7 +42,7 @@ const Cart = () => {
                                         Subtotal
                                     </div>
                                     <div className="text-md md:text-lg font-medium text-black">
-                                        &#8377;{cart.finalCartPrice.toLocaleString('en-US', {style:'currency', currency:'PKR'})}
+                                        {subTotal.toLocaleString('en-US', { style: 'currency', currency: 'PKR' })}
                                     </div>
                                 </div>
                                 <div className="text-sm md:text-md py-5 border-t mt-5">

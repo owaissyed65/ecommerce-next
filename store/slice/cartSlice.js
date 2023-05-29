@@ -3,8 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     cartItem: [],
     totalQuantity: [],
-    totalPrice: [],
-    finalCartPrice: 0
+    totalPrice: []
 }
 
 const cartSlice = createSlice({
@@ -18,8 +17,8 @@ const cartSlice = createSlice({
             if (item && existSlugQuantity && existSlugPrice) {
                 existSlugQuantity.quantityProd++;
                 existSlugPrice.finalPrice = existSlugQuantity.quantityProd * action.payload.oneQuantityPrice
-                let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
-                state.finalCartPrice = finalValue
+                // let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+                // state.finalCartPrice = finalValue
                 action.payload.size.map((val) => {
                     let existSize = item.size.find(p => { return p.selectedSize === val.selectedSize })
                     if (existSize) {
@@ -52,16 +51,54 @@ const cartSlice = createSlice({
                 state.cartItem.push({ ...action.payload, size })
                 state.totalQuantity.push({ ...quantity })
                 state.totalPrice.push({ ...price })
-                let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
-                state.finalCartPrice = finalValue
+                // let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+                // state.finalCartPrice = finalValue
+            }
+
+        },
+        updateCart(state, action) {
+            let changeQuant = state.cartItem.find(p => p.attributes.slug === action.payload.slug)
+            let changeTotalQuantity = state.totalQuantity.find(p => { return p.slug === action.payload.slug })
+            let changeTotalPrice = state.totalPrice.find(p => p.slug === action.payload.slug)
+            if (action.payload.type === 'inc') {
+                changeQuant.size.map((val) => {
+                    if (val.selectedSize === action.payload.size.selectedSize) {
+                        val.quantityProd++;
+                        changeTotalQuantity.quantityProd++
+                        changeTotalPrice.finalPrice = changeQuant.oneQuantityPrice * changeTotalQuantity.quantityProd
+                        // let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+                        // state.finalCartPrice = finalValue
+                    }
+                })
+
+            }
+            else if (action.payload.type === 'dec') {
+                changeQuant.size.map((val) => {
+                    if (val.selectedSize === action.payload.size.selectedSize) {
+                        if (val.quantityProd > 1) {
+                            val.quantityProd--;
+                            changeTotalQuantity.quantityProd--;
+                            changeTotalPrice.finalPrice = changeQuant.oneQuantityPrice * changeTotalQuantity.quantityProd
+                            // let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+                            // state.finalCartPrice = finalValue
+                        }
+                    }
+                })
             }
         },
-        updateCart(state,action){
-            
-        },
+        removeCart(state, action) {
+            let cartItems = state.cartItem.filter((p) => p.attributes.slug !== action.payload)
+            let cartQuantity = state.totalQuantity.filter((p) => p.slug !== action.payload)
+            let cartPrice = state.totalPrice.filter((p) => p.slug !== action.payload)
+            state.cartItem = [...cartItems];
+            state.totalQuantity = [...cartQuantity];
+            state.totalPrice = [...cartPrice];
+            // let finalValue = state.totalPrice.reduce((accu, curEle) => accu + curEle.finalPrice, 0)
+            // state.finalCartPrice = finalValue
+        }
     },
 })
 
 export default cartSlice
 
-export const { addToCart, updateCart } = cartSlice.actions
+export const { addToCart, updateCart, removeCart } = cartSlice.actions

@@ -35,7 +35,7 @@ const Category = ({ category, products, slug }) => {
                 {/* products grid start */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
                     {data?.data?.map((product) => (
-                         <ProductCard data={product}  key={product?.id}/>
+                        <ProductCard data={product} key={product?.id} />
                     ))}
                     {/* <ProductCard />
                     <ProductCard />
@@ -60,9 +60,8 @@ const Category = ({ category, products, slug }) => {
                             Previous
                         </button>
 
-                        <span className="font-bold">{`${pageIndex} of ${
-                            data && data.meta.pagination.pageCount
-                        }`}</span>
+                        <span className="font-bold">{`${pageIndex} of ${data && data.meta.pagination.pageCount
+                            }`}</span>
 
                         <button
                             className={`rounded py-2 px-4 bg-black text-white disabled:bg-gray-200 disabled:text-gray-500`}
@@ -94,10 +93,10 @@ export async function getStaticPaths() {
     const category = await fetchDataFromApi("/api/categories?populate=*");
     const paths = category?.data?.map((c) => ({
         params: {
-            slug: c.attributes.slug,
+            slug: c?.attributes?.slug,
         },
     }));
-
+    console.log(paths)
     return {
         paths,
         fallback: false,
